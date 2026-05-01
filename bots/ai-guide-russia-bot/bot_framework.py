@@ -394,7 +394,7 @@ class TimePadScraper:
                             etype = "Обучение"
 
                         desc = item.get("description_short", "") or ""
-                        desc_clean = re.sub(r"<[^>]+>", "", desc)[:300] if desc else ""
+                        desc_clean = re.sub(r"<[^>]+>", "", desc)[:3000] if desc else ""
 
                         events.append({
                             "title": name.strip(),
@@ -504,7 +504,7 @@ class KudaGoScraper:
                         description = result.get("description", "")
                         desc_clean = ""
                         if description:
-                            desc_clean = re.sub(r"<[^>]+>", "", description)[:300]
+                            desc_clean = re.sub(r"<[^>]+>", "", description)[:3000]
 
                         city_name = self.CITIES.get(city, city.capitalize())
                         raw_cats = result.get("categories", [])
@@ -600,7 +600,7 @@ def format_post(cfg: dict, event: dict, style: str = "new") -> tuple:
     if day_left:
         text += f"\n{day_left}"
     if desc:
-        d = re.sub(r"<[^>]+>", "", desc)[:250]
+        d = re.sub(r"<[^>]+>", "", desc)[:3000]
         text += f"\n\n{d}"
     if source:
         text += f"\n\n<i>Источник: {source}</i>"
