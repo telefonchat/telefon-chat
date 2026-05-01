@@ -1,31 +1,30 @@
 {
   "_comment": "AI Guide Russia — Bot config for AI events",
-
   "token": "1777623970767604:xm-A-72XxypV1eJggVlFqSBNI_bJInyK",
   "api_base": "https://api.telefon.chat/api/bot",
   "chat_id": "VaraxinDenis",
   "db_path": "/opt/bots/ai_guide/events_db.json",
-
   "bot_name": "AI Guide Russia",
   "bot_username": "ai_guide_russia",
   "emoji": "🤖",
-
   "description": "Собираю и публикую анонсы AI-мероприятий по всей России.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю\n📋 Еженедельный дайджест",
   "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔄 Проверка источников каждые 90 мин\n🔔 Напоминаю за 30 и 7 дней до события\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
-  "button_text": "📎 Подробнее о мероприятии",
-
-  "work_hours": { "start": 8, "end": 24 },
+  "button_text": "📎 Подробнее",
+  "work_hours": {
+    "start": 8,
+    "end": 24
+  },
   "check_interval_minutes": 90,
   "posts_per_cycle": 3,
   "delay_between_posts": 10,
-
   "digest_day": 5,
   "digest_time_hour": 9,
-
   "sources": [
-    { "type": "hightime", "url": "https://hightime.media/it-conferences/ai/" }
+    {
+      "type": "hightime",
+      "url": "https://hightime.media/it-conferences/ai/"
+    }
   ],
-
   "seed_events": [
     {
       "title": "Conversations 2026 — Конференция по генеративному AI",
@@ -83,5 +82,6 @@
       "source": "10Times",
       "event_type": "Саммит"
     }
-  ]
+  ],
+  "post_method": "createPost"
 }

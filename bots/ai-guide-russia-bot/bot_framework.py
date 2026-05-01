@@ -308,10 +308,10 @@ def time_left_text(d: int) -> str:
     return f"📅 Через {d} дн."
 
 STYLE_HEADERS = {
-    "new": "🤖 {emoji} <b>{name}</b> — Новый анонс",
-    "reminder_30": "🔔 {emoji} <b>{name}</b> — Месяц до мероприятия!",
-    "reminder_7": "🔔 {emoji} <b>{name}</b> — Неделя до мероприятия!",
-    "digest": "📋 {emoji} <b>{name}</b> — Еженедельный дайджест",
+    "new": "{emoji} <b>{name}</b> — Новый анонс",
+    "reminder_30": "{emoji} <b>{name}</b> — Месяц до мероприятия!",
+    "reminder_7": "{emoji} <b>{name}</b> — Неделя до мероприятия!",
+    "digest": "{emoji} <b>{name}</b> — Еженедельный дайджест",
 }
 
 def format_post(cfg: dict, event: dict, style: str = "new") -> tuple:
@@ -341,22 +341,25 @@ def format_post(cfg: dict, event: dict, style: str = "new") -> tuple:
         emoji=cfg.get("emoji", "📌"), name=cfg.get("bot_name", "")
     )
 
-    text = f"{header}\n"
-    text += "━━━━━━━━━━━━━━━━━━━━\n"
-    text += f"📌 <b>{title}</b>\n"
-    text += f"📅 {date_str}\n"
-    if day_left:
-        text += f"{day_left}\n"
-    text += f"📍 {city}\n"
-    text += f"🏷 {etype}"
+    text = f"{header}\n\n"
+    text += f"<b>{title}</b>\n"
+    # Compact meta line
+    meta = []
+    if date_str:
+        meta.append(f"📅 {date_str}")
+    if city:
+        meta.append(f"📍 {city}")
+    meta.append(f"🏷 {etype}")
+    text += " · ".join(meta)
     if price:
         text += f"\n💰 {price}"
+    if day_left:
+        text += f"\n{day_left}"
     if desc:
         d = re.sub(r"<[^>]+>", "", desc)[:250]
         text += f"\n\n{d}"
     if source:
         text += f"\n\n<i>Источник: {source}</i>"
-    text += "\n━━━━━━━━━━━━━━━━━━━━"
     return text, event_id, url
 
 
@@ -364,8 +367,7 @@ def format_digest(cfg: dict, ev7: list, ev14: list, ev30: list) -> str:
     """Format weekly digest."""
     e = cfg.get("emoji", "📌")
     name = cfg.get("bot_name", "")
-    text = f"📋 {e} <b>{name} — Дайджест</b>\n"
-    text += "━━━━━━━━━━━━━━━━━━━━\n"
+    text = f"{e} <b>{name} — Дайджест</b>\n"
 
     if ev7:
         text += "\n📅 <b>На этой неделе (7 дней):</b>\n"
@@ -388,7 +390,6 @@ def format_digest(cfg: dict, ev7: list, ev14: list, ev30: list) -> str:
     if not (ev7 or ev14 or ev30):
         text += "\nПока нет запланированных мероприятий."
 
-    text += "\n━━━━━━━━━━━━━━━━━━━━"
     tag = cfg.get("bot_username", "")
     if tag:
         text += f"\n\n🤖 @{tag}"
@@ -460,8 +461,9 @@ async def error_handler(update: object, ctx: ContextTypes.DEFAULT_TYPE):
 # Posting engine
 # ═══════════════════════════════════════════════════════════════════════════════
 
-async def send_post(ctx: ContextTypes.DEFAULT_TYPE, text: str,
-                    event_id: str = "", url: str = "") -> bool:
+async def send_message(ctx: ContextTypes.DEFAULT_TYPE, text: str,
+                         event_id: str = "", url: str = "") -> bool:
+    """Send as chat message (sendMessage in Bot API)."""
     cfg = ctx.bot_data["config"]
     chat_id = cfg.get("chat_id", ctx.bot_data.get("chat_id", ""))
     if not chat_id:
@@ -494,6 +496,62 @@ async def send_post(ctx: ContextTypes.DEFAULT_TYPE, text: str,
         except Exception as e2:
             logger.error(f"Text-only failed: {e2}")
             return False
+
+
+async def create_post(ctx: ContextTypes.DEFAULT_TYPE, text: str,
+                       event_id: str = "", url: str = "") -> bool:
+    """Post to user page (createPost Bot API method).
+    Auto-syncs to chat, supports comments and reactions."""
+    cfg = ctx.bot_data["config"]
+    token = cfg["token"]
+    api_base = cfg.get("api_base", "https://api.telefon.chat/api/bot")
+
+    buttons = []
+    if url and event_id:
+        btn_text = cfg.get("button_text", "📎 Подробнее")
+        buttons = [{"text": btn_text, "url": url}]
+
+    payload = {
+        "text": text,
+        "parse_mode": "HTML",
+        "comments_enabled": True,
+        "allow_reposts": True,
+    }
+    if buttons:
+        payload["buttons"] = buttons
+
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            resp = await client.post(
+                f"{api_base}/{token}/createPost",
+                json=payload,
+                headers={"Content-Type": "application/json"}
+            )
+            result = resp.json()
+            if result.get("ok"):
+                stats = ctx.bot_data["stats"]
+                stats["posts"] += 1
+                post_url = result.get("result", {}).get("url", "")
+                if post_url:
+                    logger.info(f"Post created: {post_url}")
+                return True
+            else:
+                logger.warning(f"createPost failed: {result.get('description', '')}")
+                # Fallback to sendMessage
+                return await send_message(ctx, text, event_id, url)
+    except Exception as e:
+        logger.error(f"createPost error: {e}")
+        return await send_message(ctx, text, event_id, url)
+
+
+async def send_post(ctx: ContextTypes.DEFAULT_TYPE, text: str,
+                    event_id: str = "", url: str = "") -> bool:
+    """Send post using configured method."""
+    cfg = ctx.bot_data["config"]
+    method = cfg.get("post_method", "sendMessage")
+    if method == "createPost":
+        return await create_post(ctx, text, event_id, url)
+    return await send_message(ctx, text, event_id, url)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
