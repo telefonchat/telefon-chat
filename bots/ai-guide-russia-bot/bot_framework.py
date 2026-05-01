@@ -27,7 +27,7 @@ from typing import Optional
 import httpx
 from bs4 import BeautifulSoup
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, ContextTypes, filters
 
 logger = logging.getLogger("bot_framework")
 
@@ -959,6 +959,18 @@ def run_bot(config_path: str):
     app.add_handler(CommandHandler("help", cmd_help))
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CallbackQueryHandler(button_callback, pattern=r"^event_"))
+
+    # Respond to any text message (not commands)
+    async def cmd_any(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        cfg = ctx.bot_data["config"]
+        await update.message.reply_text(
+            f"👋 <b>{cfg.get('emoji', '')} {cfg['bot_name']}</b>\n\n"
+            f"{cfg.get('description', '')}\n\n"
+            f"ℹ️ Я автоматически публикую анонсы. Используй /help для списка команд.",
+            parse_mode="HTML"
+        )
+
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, cmd_any))
     app.add_error_handler(error_handler)
 
     jq = app.job_queue
