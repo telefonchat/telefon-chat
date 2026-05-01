@@ -1,0 +1,87 @@
+{
+  "_comment": "AI Guide Russia — Bot config for AI events",
+
+  "token": "1777623970767604:xm-A-72XxypV1eJggVlFqSBNI_bJInyK",
+  "api_base": "https://api.telefon.chat/api/bot",
+  "chat_id": "VaraxinDenis",
+  "db_path": "/opt/bots/ai_guide/events_db.json",
+
+  "bot_name": "AI Guide Russia",
+  "bot_username": "ai_guide_russia",
+  "emoji": "🤖",
+
+  "description": "Собираю и публикую анонсы AI-мероприятий по всей России.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю\n📋 Еженедельный дайджест",
+  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔄 Проверка источников каждые 90 мин\n🔔 Напоминаю за 30 и 7 дней до события\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
+  "button_text": "📎 Подробнее о мероприятии",
+
+  "work_hours": { "start": 8, "end": 24 },
+  "check_interval_minutes": 90,
+  "posts_per_cycle": 3,
+  "delay_between_posts": 10,
+
+  "digest_day": 5,
+  "digest_time_hour": 9,
+
+  "sources": [
+    { "type": "hightime", "url": "https://hightime.media/it-conferences/ai/" }
+  ],
+
+  "seed_events": [
+    {
+      "title": "Conversations 2026 — Конференция по генеративному AI",
+      "description": "2 дня, 4 трека, 70+ спикеров. Бизнес и AI-трансформация, стартапы, GenAI в продуктах, технологии, ИИ-агенты.",
+      "date": "25-26 июня 2026",
+      "city": "Санкт-Петербург",
+      "url": "https://conversations-ai.com/",
+      "source": "HighTime Media",
+      "event_type": "Конференция",
+      "price": "от 29 900 ₽"
+    },
+    {
+      "title": "Tech Week 2026 — Технологическая конференция",
+      "description": "ИИ, разработка, ритейл, e-commerce, цифровизация, логистика. Выставка ведущих компаний.",
+      "date": "17-18 июня 2026",
+      "city": "Москва",
+      "url": "https://techweek.moscow/",
+      "source": "HighTime Media",
+      "event_type": "Конференция",
+      "price": "от 20 000 ₽"
+    },
+    {
+      "title": "PyCon Russia 2026 — Крупнейшая Python-конференция",
+      "description": "700+ участников, 35+ докладов. Data Science, ML/AI, backend, инфраструктура.",
+      "date": "Июль 2026",
+      "city": "Москва",
+      "url": "https://www.pycon.ru/",
+      "source": "PyCon Russia",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Летняя Conversations 2026",
+      "description": "2 дня, 4 трека, 40+ докладов, дискуссии, нетворкинг.",
+      "date": "25-26 июня 2026",
+      "city": "Санкт-Петербург",
+      "url": "https://all-events.ru/events/letnyaya-conversations-2026/",
+      "source": "All-Events",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Neo4j Nodes — Engineering Better Intelligence",
+      "description": "Графовые БД и AI. Машинное обучение, анализ данных, интеллектуальные системы.",
+      "date": "2026",
+      "city": "Онлайн",
+      "url": "https://neo4j.com/nodes/",
+      "source": "10Times",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Machine Learning Developers Summit",
+      "description": "ML-разработка, MLOps, продакшн ML-систем, инфраструктура для моделей.",
+      "date": "2026",
+      "city": "Онлайн",
+      "url": "https://www.mlds.com/",
+      "source": "10Times",
+      "event_type": "Саммит"
+    }
+  ]
+}
