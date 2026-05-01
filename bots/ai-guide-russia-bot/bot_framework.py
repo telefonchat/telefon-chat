@@ -293,15 +293,17 @@ class TimePadScraper:
         "build": ["строител", "expo", "выставк", "оборудован", "садовод"],
     }
 
-    def __init__(self, token: str, keywords: list[str] = None, max_events: int = 10):
+    def __init__(self, token: str, keywords: list[str] = None, include_keywords: list[str] = None, max_events: int = 10):
         """
         Args:
             token: TimePad developer API token
-            keywords: list of keywords to filter by (URL-encoded automatically)
+            keywords: list of API-level keywords (URL-encoded automatically)
+            include_keywords: post-fetch filter — title/desc must contain at least one
             max_events: max events to fetch per cycle
         """
         self.token = token
         self.keywords = keywords or []
+        self.include_keywords = include_keywords or []
         self.max_events = max_events
 
     async def fetch(self, db: EventsDB) -> list[dict]:
@@ -339,6 +341,11 @@ class TimePadScraper:
                         name = item.get("name", "")
                         url = item.get("url", "")
                         if not name or not url or db.exists(url):
+                            continue
+
+                        # Post-fetch content filter: skip if title+desc don't match include_keywords
+                        full_text = (name + " " + (item.get("description_short", "") or "")).lower()
+                        if self.include_keywords and not any(kw.lower() in full_text for kw in self.include_keywords):
                             continue
 
                         loc = item.get("location", {}) or {}
@@ -876,6 +883,7 @@ def build_sources(config: dict) -> list:
             sources.append(TimePadScraper(
                 token=src_cfg["token"],
                 keywords=src_cfg.get("keywords", []),
+                include_keywords=src_cfg.get("include_keywords", []),
                 max_events=src_cfg.get("max_events", 10),
             ))
         elif src_cfg.get("type") == "kudago":
