@@ -6,9 +6,7 @@
   "bot_name": "Gamedev Guide Russia",
   "bot_username": "gamedev_guide_russia",
   "emoji": "🎮",
-  "description": "Собираю анонсы геймдев-мероприятий по всей России: конференции, джемы, митапы.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю",
-  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
-  "button_text": "📎 Подробнее",
+  "button_text": "🔗 Ссылка",
   "post_method": "createPost",
   "work_hours": { "start": 8, "end": 24 },
   "check_interval_minutes": 90,
@@ -16,52 +14,8 @@
   "delay_between_posts": 10,
   "digest_day": 5,
   "digest_time_hour": 9,
-  "sources": [],
-  "seed_events": [
-    {
-      "title": "DevGAMM 2026 — Конференция разработчиков игр",
-      "description": "Крупнейшая геймдев-конференция в Восточной Европе. Геймдизайн, арт, программирование, продюсирование, VR/AR.",
-      "date": "Октябрь 2026",
-      "city": "Москва",
-      "url": "https://devgamm.com/",
-      "source": "Gamedev Events",
-      "event_type": "Конференция"
-    },
-    {
-      "title": "Игрострой 2026 — Фестиваль игр",
-      "description": "Фестиваль инди-игр. Питчинг, выставка, нетворкинг с издателями.",
-      "date": "Сентябрь 2026",
-      "city": "Москва",
-      "url": "https://igrostroy.ru/",
-      "source": "Gamedev Events",
-      "event_type": "Фестиваль"
-    },
-    {
-      "title": "Ludum Dare 56 — Игровой джем",
-      "description": "48-часовой игровой джем. Создание игры с нуля за уикенд. Участие онлайн по всему миру.",
-      "date": "Октябрь 2026",
-      "city": "Онлайн",
-      "url": "https://ldjam.com/",
-      "source": "Gamedev Events",
-      "event_type": "Хакатон"
-    },
-    {
-      "title": "White Nights Conference 2026",
-      "description": "Международная конференция разработчиков игр. Маркетинг, монетизация, разработка, издательство.",
-      "date": "Май 2026",
-      "city": "Санкт-Петербург",
-      "url": "https://wnconf.com/",
-      "source": "Gamedev Events",
-      "event_type": "Конференция"
-    },
-    {
-      "title": "Unreal Fest 2026",
-      "description": "Конференция по Unreal Engine. Графика, производительность, VR, мобильные игры.",
-      "date": "2026",
-      "city": "Москва",
-      "url": "https://www.unrealengine.com/events/",
-      "source": "Gamedev Events",
-      "event_type": "Конференция"
-    }
-  ]
+  "sources": [
+    { "type": "kudago", "cities": ["msk","spb"], "categories": ["entertainment","festival"], "max_per_city": 3 }
+  ],
+  "seed_events": []
 }

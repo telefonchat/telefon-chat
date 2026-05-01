@@ -6,9 +6,7 @@
   "bot_name": "Business Guide Russia",
   "bot_username": "business_guide_russia",
   "emoji": "💼",
-  "description": "Собираю анонсы бизнес-мероприятий: конференции, форумы, нетворкинг, выставки.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю",
-  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
-  "button_text": "📎 Подробнее",
+  "button_text": "🔗 Ссылка",
   "post_method": "createPost",
   "work_hours": { "start": 8, "end": 24 },
   "check_interval_minutes": 90,
@@ -16,43 +14,9 @@
   "delay_between_posts": 10,
   "digest_day": 5,
   "digest_time_hour": 9,
-  "sources": [],
-  "seed_events": [
-    {
-      "title": "ПМЭФ 2026 — Петербургский международный экономический форум",
-      "description": "Крупнейший экономический форум России. Бизнес, инвестиции, международное сотрудничество, технологии.",
-      "date": "3-6 июня 2026",
-      "city": "Санкт-Петербург",
-      "url": "https://forumspb.com/",
-      "source": "Business Events",
-      "event_type": "Форум"
-    },
-    {
-      "title": "ВЭФ 2026 — Восточный экономический форум",
-      "description": "Международный форум по экономическому развитию Дальнего Востока. Бизнес, инвестиции, партнёрство.",
-      "date": "Сентябрь 2026",
-      "city": "Владивосток",
-      "url": "https://forumvostok.ru/",
-      "source": "Business Events",
-      "event_type": "Форум"
-    },
-    {
-      "title": "Russian Startup Tour 2026",
-      "description": "Тур для стартапов по городам России. Питчинг перед инвесторами, менторство, нетворкинг.",
-      "date": "Март-апрель 2026",
-      "city": "Россия",
-      "url": "https://startup-tour.ru/",
-      "source": "Business Events",
-      "event_type": "Тур"
-    },
-    {
-      "title": "Skolkovo Open Week 2026",
-      "description": "Дни открытых дверей Сколково. Встречи с резидентами, экскурсии, лекции, нетворкинг.",
-      "date": "2026",
-      "city": "Москва",
-      "url": "https://sk.ru/",
-      "source": "Business Events",
-      "event_type": "Дни открытых дверей"
-    }
-  ]
+  "sources": [
+    { "type": "kudago", "cities": ["msk","spb","ekb","kazan"], "categories": ["business-events"], "max_per_city": 5 },
+    { "type": "kudago", "cities": ["msk","spb"], "categories": ["exhibition"], "max_per_city": 3 }
+  ],
+  "seed_events": []
 }

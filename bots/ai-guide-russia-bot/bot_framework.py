@@ -281,12 +281,125 @@ class HightimeScraper:
         return events
 
 
-class GoMeetupScraper:
-    """Scrapes gomeetup.ru for events matching a topic."""
+class KudaGoScraper:
+    """Scrapes kudago.com via free public API. No auth needed."""
+
+    # KudaGo city slugs
+    CITIES = {
+        "msk": "Москва",
+        "spb": "Санкт-Петербург",
+        "kazan": "Казань",
+        "nsk": "Новосибирск",
+        "ekb": "Екатеринбург",
+        "nnv": "Нижний Новгород",
+        "samara": "Самара",
+        "krd": "Краснодар",
+        "sochi": "Сочи",
+        "ufa": "Уфа",
+        "krasnoyarsk": "Красноярск",
+        "perm": "Пермь",
+        "vlg": "Волгоград",
+        "voronezh": "Воронеж",
+        "rostov": "Ростов-на-Дону",
+        "tula": "Тула",
+        "chel": "Челябинск",
+    }
+
+    def __init__(self, cities: list[str], categories: list[str], max_per_city: int = 5):
+        """
+        Args:
+            cities: KudaGo city slugs (e.g. ['msk', 'spb'])
+            categories: category slugs (e.g. ['business-events', 'education'])
+            max_per_city: max events per city per cycle
+        """
+        self.cities = cities or ["msk"]
+        self.categories = categories or []
+        self.max_per_city = max_per_city
 
     async def fetch(self, db: EventsDB) -> list[dict]:
         events = []
-        # TODO: implement when GoMeetup sources are stable
+        now = int(datetime.now(timezone.utc).timestamp())
+        ninety_days_ago = now - 86400 * 90
+
+        for city in self.cities:
+            try:
+                params = {
+                    "location": city,
+                    "page_size": self.max_per_city,
+                    "fields": "title,description,dates,site_url,categories,location",
+                    "actual_since": ninety_days_ago,
+                    "order_by": "-publication_date",
+                    "ctype": "event",
+                }
+
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.get(
+                        "https://kudago.com/public-api/v1.4/events/",
+                        params=params,
+                        headers={"User-Agent": "Mozilla/5.0"},
+                    )
+                    if resp.status_code != 200:
+                        continue
+
+                    data = resp.json()
+                    for result in data.get("results", []):
+                        title = result.get("title", "")
+                        site_url = result.get("site_url", "")
+                        if not title or not site_url or db.exists(site_url):
+                            continue
+
+                        # Filter by category if specified
+                        cats = result.get("categories", [])
+                        if self.categories and not any(c in cats for c in self.categories):
+                            continue
+
+                        dates = result.get("dates", [])
+                        date_str = ""
+                        if dates:
+                            start_ts = dates[0].get("start", 0)
+                            if start_ts:
+                                try:
+                                    dt = datetime.fromtimestamp(start_ts, tz=timezone.utc)
+                                    date_str = dt.strftime("%d %B %Y").replace(" ", " ").replace(
+                                        "January","января").replace("February","февраля").replace(
+                                        "March","марта").replace("April","апреля").replace(
+                                        "May","мая").replace("June","июня").replace("July","июля").replace(
+                                        "August","августа").replace("September","сентября").replace(
+                                        "October","октября").replace("November","ноября").replace(
+                                        "December","декабря")
+                                except:
+                                    pass
+
+                        description = result.get("description", "")
+                        desc_clean = ""
+                        if description:
+                            desc_clean = re.sub(r"<[^>]+>", "", description)[:300]
+
+                        city_name = self.CITIES.get(city, city.capitalize())
+                        raw_cats = result.get("categories", [])
+                        etype = "Мероприятие"
+                        if "business-events" in raw_cats:
+                            etype = "Бизнес-событие"
+                        elif "education" in raw_cats:
+                            etype = "Обучение"
+                        elif "exhibition" in raw_cats:
+                            etype = "Выставка"
+                        elif "festival" in raw_cats:
+                            etype = "Фестиваль"
+
+                        events.append({
+                            "title": title.strip(),
+                            "description": desc_clean,
+                            "date": date_str,
+                            "city": city_name,
+                            "url": site_url,
+                            "source": "KudaGo",
+                            "event_type": etype,
+                        })
+
+            except Exception as e:
+                logger.error(f"KudaGo error for {city}: {e}")
+
         return events
 
 
@@ -654,8 +767,12 @@ def build_sources(config: dict) -> list:
     for src_cfg in config.get("sources", []):
         if src_cfg.get("type") == "hightime" and src_cfg.get("url"):
             sources.append(HightimeScraper(src_cfg["url"]))
-        elif src_cfg.get("type") == "gomeetup":
-            sources.append(GoMeetupScraper())
+        elif src_cfg.get("type") == "kudago":
+            sources.append(KudaGoScraper(
+                cities=src_cfg.get("cities", ["msk"]),
+                categories=src_cfg.get("categories", []),
+                max_per_city=src_cfg.get("max_per_city", 5),
+            ))
 
     return sources
 

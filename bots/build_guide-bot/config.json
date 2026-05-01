@@ -6,9 +6,7 @@
   "bot_name": "Build Guide Russia",
   "bot_username": "build_guide_russia",
   "emoji": "🔧",
-  "description": "Собираю анонсы мероприятий по строительству, технике и садоводству: выставки, форумы, семинары.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю",
-  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
-  "button_text": "📎 Подробнее",
+  "button_text": "🔗 Ссылка",
   "post_method": "createPost",
   "work_hours": { "start": 8, "end": 24 },
   "check_interval_minutes": 90,
@@ -16,52 +14,8 @@
   "delay_between_posts": 10,
   "digest_day": 5,
   "digest_time_hour": 9,
-  "sources": [],
-  "seed_events": [
-    {
-      "title": "МосБилд 2026 — Международная выставка строительства",
-      "description": "Строительные материалы, технологии, архитектура, дизайн интерьеров, инженерные системы.",
-      "date": "Март 2026",
-      "city": "Москва",
-      "url": "https://mosbuild.ru/",
-      "source": "Build Events",
-      "event_type": "Выставка"
-    },
-    {
-      "title": "Aquatherm 2026 — Отопление, водоснабжение, сантехника",
-      "description": "Международная выставка инженерного оборудования. Отопление, водоснабжение, вентиляция.",
-      "date": "Февраль 2026",
-      "city": "Москва",
-      "url": "https://aquatherm-moscow.ru/",
-      "source": "Build Events",
-      "event_type": "Выставка"
-    },
-    {
-      "title": "Дом и Сад 2026 — Выставка садоводства",
-      "description": "Ландшафтный дизайн, садовое оборудование, растения, теплицы, полив, инструменты.",
-      "date": "Апрель 2026",
-      "city": "Москва",
-      "url": "https://housegarden.ru/",
-      "source": "Build Events",
-      "event_type": "Выставка"
-    },
-    {
-      "title": "СТТ Экспо 2026 — Строительная техника и технологии",
-      "description": "Строительная, дорожная и специальная техника. Оборудование, запчасти, сервис.",
-      "date": "Май 2026",
-      "city": "Москва",
-      "url": "https://ctt-expo.ru/",
-      "source": "Build Events",
-      "event_type": "Выставка"
-    },
-    {
-      "title": "Фестиваль Садов и Людей 2026",
-      "description": "Фестиваль ландшафтного дизайна. Сады, мастер-классы, лекции, растения.",
-      "date": "Июль 2026",
-      "city": "Москва",
-      "url": "https://gardenfest.ru/",
-      "source": "Build Events",
-      "event_type": "Фестиваль"
-    }
-  ]
+  "sources": [
+    { "type": "kudago", "cities": ["msk","spb"], "categories": ["exhibition"], "max_per_city": 5 }
+  ],
+  "seed_events": []
 }
