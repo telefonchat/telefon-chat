@@ -293,15 +293,17 @@ class TimePadScraper:
         "build": ["строител", "expo", "выставк", "оборудован", "садовод"],
     }
 
-    def __init__(self, token: str, keywords: list[str] = None, include_keywords: list[str] = None, max_events: int = 10):
+    def __init__(self, token: str, category_ids: list[int] = None, keywords: list[str] = None, include_keywords: list[str] = None, max_events: int = 10):
         """
         Args:
             token: TimePad developer API token
+            category_ids: filter by category (e.g. [452] for IT, [217] for Business)
             keywords: list of API-level keywords (URL-encoded automatically)
             include_keywords: post-fetch filter — title/desc must contain at least one
             max_events: max events to fetch per cycle
         """
         self.token = token
+        self.category_ids = category_ids or []
         self.keywords = keywords or []
         self.include_keywords = include_keywords or []
         self.max_events = max_events
@@ -311,16 +313,22 @@ class TimePadScraper:
         today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         six_months = (datetime.now(timezone.utc) + timedelta(days=180)).strftime("%Y-%m-%d")
 
-        for keyword in self.keywords or [""]:
+        # Build base params
+        base_params = {
+            "limit": self.max_events,
+            "fields": "name,description_short,starts_at,location,url,categories",
+            "access_statuses": "public",
+            "starts_at_min": today,
+            "starts_at_max": six_months,
+            "sort": "starts_at",
+        }
+        if self.category_ids:
+            base_params["category_ids"] = ",".join(str(c) for c in self.category_ids)
+
+        query_patterns = self.keywords or [""]
+        for keyword in query_patterns:
             try:
-                params = {
-                    "limit": self.max_events,
-                    "fields": "name,description_short,starts_at,location,url,categories",
-                    "access_statuses": "public",
-                    "starts_at_min": today,
-                    "starts_at_max": six_months,
-                    "sort": "starts_at",
-                }
+                params = dict(base_params)
                 if keyword:
                     params["keywords"] = keyword
 
@@ -893,6 +901,7 @@ def build_sources(config: dict) -> list:
         elif src_cfg.get("type") == "timepad" and src_cfg.get("token"):
             sources.append(TimePadScraper(
                 token=src_cfg["token"],
+                category_ids=src_cfg.get("category_ids", []),
                 keywords=src_cfg.get("keywords", []),
                 include_keywords=src_cfg.get("include_keywords", []),
                 max_events=src_cfg.get("max_events", 10),

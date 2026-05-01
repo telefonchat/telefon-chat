@@ -33,11 +33,25 @@
     {
       "type": "timepad",
       "token": "9b6097cce146e1d89ad169c5d04f19803dd157d3",
+      "category_ids": [
+        452,
+        2335
+      ],
       "keywords": [
         "game",
         "игр",
         "gamedev",
-        "киберспорт"
+        "геймдев",
+        "киберспорт",
+        "разработк игр"
+      ],
+      "include_keywords": [
+        "game",
+        "игр",
+        "gamedev",
+        "геймдев",
+        "киберспорт",
+        "разработк"
       ],
       "max_events": 5
     }

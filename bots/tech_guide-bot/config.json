@@ -33,12 +33,15 @@
     {
       "type": "timepad",
       "token": "9b6097cce146e1d89ad169c5d04f19803dd157d3",
+      "category_ids": [
+        452
+      ],
       "keywords": [
         "конференци",
-        "ИТ и",
         "форум",
+        "хакатон",
         "tech",
-        "хакатон"
+        "разработк"
       ],
       "include_keywords": [
         "конференц",
