@@ -1,0 +1,69 @@
+{
+  "token": "1777634324324218:lbtFkNe_NRvXvP4laB_geG-_d4INRyyz",
+  "api_base": "https://api.telefon.chat/api/bot",
+  "chat_id": "VaraxinDenis",
+  "db_path": "/opt/bots/tech_guide/events_db.json",
+  "bot_name": "Tech Guide Russia",
+  "bot_username": "tech_guide_russia",
+  "emoji": "🚀",
+  "description": "Собираю анонсы IT-конференций, митапов и хакатонов по всей России.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю\n📋 Еженедельный дайджест",
+  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней до события\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
+  "button_text": "📎 Подробнее",
+  "post_method": "createPost",
+  "work_hours": { "start": 8, "end": 24 },
+  "check_interval_minutes": 90,
+  "posts_per_cycle": 3,
+  "delay_between_posts": 10,
+  "digest_day": 5,
+  "digest_time_hour": 9,
+  "sources": [],
+  "seed_events": [
+    {
+      "title": "HighLoad++ 2026 — Конференция о высоких нагрузках",
+      "description": "Крупнейшая конференция о высоконагруженных системах. Backend, архитектура, базы данных, инфраструктура, DevOps.",
+      "date": "Ноябрь 2026",
+      "city": "Москва",
+      "url": "https://highload.ru/",
+      "source": "Tech Events",
+      "event_type": "Конференция",
+      "price": "от 25 000 ₽"
+    },
+    {
+      "title": "JPoint 2026 — Конференция Java-разработчиков",
+      "description": "Java, Kotlin, JVM, микросервисы, производительность, инструменты. Для опытных Java-разработчиков.",
+      "date": "Октябрь 2026",
+      "city": "Москва",
+      "url": "https://jpoint.ru/",
+      "source": "Tech Events",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "DevOps Conf 2026",
+      "description": "CI/CD, инфраструктура, Kubernetes, мониторинг, DevSecOps. Практические кейсы от ведущих компаний.",
+      "date": "Сентябрь 2026",
+      "city": "Москва",
+      "url": "https://devopsconf.ru/",
+      "source": "Tech Events",
+      "event_type": "Конференция",
+      "price": "от 15 000 ₽"
+    },
+    {
+      "title": "Meta Conf 2026 — Конференция по IT-менеджменту",
+      "description": "Управление IT-командами, Agile, Scrum, Kanban, мотивация, рекрутинг.",
+      "date": "Октябрь 2026",
+      "city": "Москва",
+      "url": "https://meta-conf.ru/",
+      "source": "Tech Events",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Heisenbug 2026 — Конференция по тестированию",
+      "description": "Автотесты, QA, нагрузочное тестирование, безопасность, инструменты.",
+      "date": "Сентябрь 2026",
+      "city": "Москва",
+      "url": "https://heisenbug.ru/",
+      "source": "Tech Events",
+      "event_type": "Конференция"
+    }
+  ]
+}

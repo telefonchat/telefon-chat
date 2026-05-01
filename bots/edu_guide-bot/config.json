@@ -1,0 +1,58 @@
+{
+  "token": "1777634404300352:K_3j7Ztqfh_g1fiFN2aLR6mr39_daMcV",
+  "api_base": "https://api.telefon.chat/api/bot",
+  "chat_id": "VaraxinDenis",
+  "db_path": "/opt/bots/edu_guide/events_db.json",
+  "bot_name": "Education Guide Russia",
+  "bot_username": "edu_guide_russia",
+  "emoji": "📚",
+  "description": "Собираю анонсы образовательных мероприятий: курсы, вебинары, интенсивы, мастер-классы.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю",
+  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
+  "button_text": "📎 Подробнее",
+  "post_method": "createPost",
+  "work_hours": { "start": 8, "end": 24 },
+  "check_interval_minutes": 90,
+  "posts_per_cycle": 3,
+  "delay_between_posts": 10,
+  "digest_day": 5,
+  "digest_time_hour": 9,
+  "sources": [],
+  "seed_events": [
+    {
+      "title": "EdCrunch 2026 — Конференция по EdTech",
+      "description": "Крупнейшая конференция по образовательным технологиям. Цифровое образование, AI в обучении, онлайн-курсы, LMS.",
+      "date": "Октябрь 2026",
+      "city": "Москва",
+      "url": "https://edcrunch.ru/",
+      "source": "Education Events",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Skillbox Open Day 2026",
+      "description": "День открытых дверей Skillbox. Презентация курсов, встречи с преподавателями, мастер-классы.",
+      "date": "Июнь 2026",
+      "city": "Москва",
+      "url": "https://skillbox.ru/",
+      "source": "Education Events",
+      "event_type": "День открытых дверей"
+    },
+    {
+      "title": "Яндекс.Лицей — Набор 2026",
+      "description": "Бесплатные курсы по программированию для школьников. Python, веб-разработка, Data Science.",
+      "date": "Август 2026",
+      "city": "Россия",
+      "url": "https://lyceum.yandex.ru/",
+      "source": "Education Events",
+      "event_type": "Курс"
+    },
+    {
+      "title": "Coursera Partner Summit 2026",
+      "description": "Конференция для образовательных партнёров Coursera. Новые форматы, AI в обучении, глобальные тренды.",
+      "date": "2026",
+      "city": "Онлайн",
+      "url": "https://partner.coursera.org/",
+      "source": "Education Events",
+      "event_type": "Конференция"
+    }
+  ]
+}

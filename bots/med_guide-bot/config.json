@@ -1,0 +1,58 @@
+{
+  "token": "1777634669621272:csMTYb_C_USACzDJJvFuPfGD6_Mv90Wy",
+  "api_base": "https://api.telefon.chat/api/bot",
+  "chat_id": "VaraxinDenis",
+  "db_path": "/opt/bots/med_guide/events_db.json",
+  "bot_name": "Med Guide Russia",
+  "bot_username": "med_guide_russia",
+  "emoji": "🏥",
+  "description": "Собираю анонсы медицинских и биотех-мероприятий: конференции, форумы, выставки.\n🔍 Поиск по источникам\n🔔 Напоминания за месяц и неделю",
+  "help_text": "⏰ Работаю 08:00–24:00 МСК\n🔔 Напоминаю за 30 и 7 дней\n📋 Дайджест каждую субботу\n\nКоманды:\n/stats — статистика\n/help — справка",
+  "button_text": "📎 Подробнее",
+  "post_method": "createPost",
+  "work_hours": { "start": 8, "end": 24 },
+  "check_interval_minutes": 90,
+  "posts_per_cycle": 3,
+  "delay_between_posts": 10,
+  "digest_day": 5,
+  "digest_time_hour": 9,
+  "sources": [],
+  "seed_events": [
+    {
+      "title": "Биотехнологии и Медицина 2026 — Международный форум",
+      "description": "Биотехнологии в медицине, фармацевтика, генная инженерия, AI в диагностике.",
+      "date": "Октябрь 2026",
+      "city": "Москва",
+      "url": "https://biotechforum.ru/",
+      "source": "Medical Events",
+      "event_type": "Форум"
+    },
+    {
+      "title": "Здравоохранение России 2026 — Выставка",
+      "description": "Крупнейшая выставка медицинского оборудования, технологий, фармацевтики и услуг.",
+      "date": "Декабрь 2026",
+      "city": "Москва",
+      "url": "https://zdravo-expo.ru/",
+      "source": "Medical Events",
+      "event_type": "Выставка"
+    },
+    {
+      "title": "AI в Медицине 2026 — Международная конференция",
+      "description": "Искусственный интеллект в диагностике, лечении, управлении клиниками. Кейсы, исследования.",
+      "date": "Сентябрь 2026",
+      "city": "Москва",
+      "url": "https://aimed.ru/",
+      "source": "Medical Events",
+      "event_type": "Конференция"
+    },
+    {
+      "title": "Биотех2030 — Форум биотехнологий",
+      "description": "Биоинформатика, синтетическая биология, клеточные технологии, нейроинтерфейсы.",
+      "date": "Ноябрь 2026",
+      "city": "Сколково",
+      "url": "https://biotech2030.ru/",
+      "source": "Medical Events",
+      "event_type": "Форум"
+    }
+  ]
+}
