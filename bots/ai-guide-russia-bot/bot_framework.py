@@ -345,8 +345,19 @@ class TimePadScraper:
 
                         # Post-fetch content filter: skip if title+desc don't match include_keywords
                         full_text = (name + " " + (item.get("description_short", "") or "")).lower()
-                        if self.include_keywords and not any(kw.lower() in full_text for kw in self.include_keywords):
-                            continue
+                        if self.include_keywords:
+                            # Short keywords (< 5 chars) require word-boundary match
+                            matched = False
+                            for kw in self.include_keywords:
+                                if len(kw) < 5:
+                                    if re.search(r'\b' + re.escape(kw) + r'\b', full_text):
+                                        matched = True
+                                        break
+                                elif kw.lower() in full_text:
+                                    matched = True
+                                    break
+                            if not matched:
+                                continue
 
                         loc = item.get("location", {}) or {}
                         city = loc.get("city", "") if isinstance(loc, dict) else ""
