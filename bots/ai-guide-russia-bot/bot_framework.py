@@ -281,6 +281,111 @@ class HightimeScraper:
         return events
 
 
+class TimePadScraper:
+    """Scrapes timepad.ru via free public API. Needs a developer token."""
+
+    CATEGORY_KEYWORDS = {
+        "tech": ["конференци", "ИТ и", "форум", "хакатон", "tech", "IT"],
+        "education": ["образован", "курс", "мастер-класс", "тренинг", "семинар", "лекци", "вебинар"],
+        "business": ["бизнес", "нетворк", "startup", "инвестици", "предпринимател"],
+        "gamedev": ["game", "gamedev", "геймдев", "игр"],
+        "med": ["медицин", "биотех", "health", "здравоохранен"],
+        "build": ["строител", "expo", "выставк", "оборудован", "садовод"],
+    }
+
+    def __init__(self, token: str, keywords: list[str] = None, max_events: int = 10):
+        """
+        Args:
+            token: TimePad developer API token
+            keywords: list of keywords to filter by (URL-encoded automatically)
+            max_events: max events to fetch per cycle
+        """
+        self.token = token
+        self.keywords = keywords or []
+        self.max_events = max_events
+
+    async def fetch(self, db: EventsDB) -> list[dict]:
+        events = []
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        six_months = (datetime.now(timezone.utc) + timedelta(days=180)).strftime("%Y-%m-%d")
+
+        for keyword in self.keywords or [""]:
+            try:
+                params = {
+                    "limit": self.max_events,
+                    "fields": "name,description_short,starts_at,location,url,categories",
+                    "access_statuses": "public",
+                    "starts_at_min": today,
+                    "starts_at_max": six_months,
+                    "sort": "starts_at",
+                }
+                if keyword:
+                    params["keywords"] = keyword
+
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.get(
+                        "https://api.timepad.ru/v1/events",
+                        params=params,
+                        headers={
+                            "Authorization": f"Bearer {self.token}",
+                            "User-Agent": "Mozilla/5.0",
+                        },
+                    )
+                    if resp.status_code != 200:
+                        continue
+
+                    data = resp.json()
+                    for item in data.get("values", []):
+                        name = item.get("name", "")
+                        url = item.get("url", "")
+                        if not name or not url or db.exists(url):
+                            continue
+
+                        loc = item.get("location", {}) or {}
+                        city = loc.get("city", "") if isinstance(loc, dict) else ""
+                        if not city:
+                            continue
+
+                        starts = item.get("starts_at", "")
+                        date_str = ""
+                        if starts:
+                            try:
+                                dt = datetime.fromisoformat(starts.replace("Z", "+00:00"))
+                                months = ["января","февраля","марта","апреля","мая","июня",
+                                          "июля","августа","сентября","октября","ноября","декабря"]
+                                date_str = f"{dt.day} {months[dt.month-1]} {dt.year}"
+                            except:
+                                date_str = starts[:10]
+
+                        cats = item.get("categories", [])
+                        cat_names = [c.get("name", "") for c in cats if isinstance(c, dict)]
+                        etype = "Мероприятие"
+                        if any("бизнес" in (c or "").lower() for c in cat_names):
+                            etype = "Бизнес-событие"
+                        elif any("ИТ" in (c or "") for c in cat_names):
+                            etype = "Конференция"
+                        elif any("образован" in (c or "").lower() for c in cat_names):
+                            etype = "Обучение"
+
+                        desc = item.get("description_short", "") or ""
+                        desc_clean = re.sub(r"<[^>]+>", "", desc)[:300] if desc else ""
+
+                        events.append({
+                            "title": name.strip(),
+                            "description": desc_clean,
+                            "date": date_str,
+                            "city": city,
+                            "url": url,
+                            "source": "TimePad",
+                            "event_type": etype,
+                        })
+
+            except Exception as e:
+                logger.error(f"TimePad error ({keyword}): {e}")
+
+        return events
+
+
 class KudaGoScraper:
     """Scrapes kudago.com via free public API. No auth needed."""
 
@@ -767,6 +872,12 @@ def build_sources(config: dict) -> list:
     for src_cfg in config.get("sources", []):
         if src_cfg.get("type") == "hightime" and src_cfg.get("url"):
             sources.append(HightimeScraper(src_cfg["url"]))
+        elif src_cfg.get("type") == "timepad" and src_cfg.get("token"):
+            sources.append(TimePadScraper(
+                token=src_cfg["token"],
+                keywords=src_cfg.get("keywords", []),
+                max_events=src_cfg.get("max_events", 10),
+            ))
         elif src_cfg.get("type") == "kudago":
             sources.append(KudaGoScraper(
                 cities=src_cfg.get("cities", ["msk"]),

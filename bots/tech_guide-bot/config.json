@@ -8,16 +8,40 @@
   "emoji": "🚀",
   "button_text": "🔗 Ссылка",
   "post_method": "createPost",
-  "work_hours": { "start": 8, "end": 24 },
+  "work_hours": {
+    "start": 8,
+    "end": 24
+  },
   "check_interval_minutes": 90,
   "posts_per_cycle": 3,
   "delay_between_posts": 10,
   "digest_day": 5,
   "digest_time_hour": 9,
   "sources": [
-    { "type": "hightime", "url": "https://hightime.media/it-conferences/dev/" },
-    { "type": "hightime", "url": "https://hightime.media/it-conferences/" },
-    { "type": "hightime", "url": "https://hightime.media/it-conferences/startup/" }
+    {
+      "type": "hightime",
+      "url": "https://hightime.media/it-conferences/dev/"
+    },
+    {
+      "type": "hightime",
+      "url": "https://hightime.media/it-conferences/"
+    },
+    {
+      "type": "hightime",
+      "url": "https://hightime.media/it-conferences/startup/"
+    },
+    {
+      "type": "timepad",
+      "token": "9b6097cce146e1d89ad169c5d04f19803dd157d3",
+      "keywords": [
+        "конференци",
+        "ИТ и",
+        "форум",
+        "tech",
+        "хакатон"
+      ],
+      "max_events": 5
+    }
   ],
   "seed_events": []
 }
