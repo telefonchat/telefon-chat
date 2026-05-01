@@ -17,7 +17,7 @@ import logging
 import os
 import random
 import re
-import time as time_module
+from datetime import time as dt_time
 from datetime import datetime, timezone, timedelta, date
 from typing import Optional
 
@@ -714,7 +714,7 @@ async def main():
     jq.run_repeating(check_new_events, interval=interval_sec, first=10)
     jq.run_repeating(check_reminders, interval=interval_sec, first=30)
     # Digest every Saturday at 12:00 MSK (09:00 UTC)
-    jq.run_daily(send_digest, time=time_module.struct_time((9, 0, 0)), days_of_week=(5,))  # Saturday
+    jq.run_daily(send_digest, time=dt_time(9, 0, 0), days=(5,))  # Saturday
 
     logger.info(f"Bot started. Check interval: {CHECK_INTERVAL}min. Digest: Saturday 12:00 MSK")
 
